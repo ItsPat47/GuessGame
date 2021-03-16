@@ -2,10 +2,12 @@ import { StyleSheet } from "react-native";
 import { red } from "ansi-colors";
 
 const Style = StyleSheet.create({
+  blueBackground: {
+    backgroundColor: "#edc344"
+  },
   mainPageBackground: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#0A75AD",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -27,7 +29,8 @@ const Style = StyleSheet.create({
   logo: {
     width: 200,
     height: 200,
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    marginBottom: 50
   }
 });
 

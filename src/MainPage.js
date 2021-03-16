@@ -16,6 +16,8 @@ class MainPage extends React.Component {
     GameModalView: false
   };
 
+  componentDidMount() {}
+
   openSettingsModal = () => {
     this.setState({ SettingsmodalView: !this.state.SettingsmodalView });
   };
@@ -23,16 +25,20 @@ class MainPage extends React.Component {
   openGameModal = () => {
     this.setState({ GameModalView: !this.state.GameModalView });
   };
+
   render() {
     return (
-      <View style={css.mainPageBackground}>
+      <View style={[css.mainPageBackground, css.blueBackground]}>
         <Image source={logo} style={css.logo} />
-        <Pressable style={css.buttonContainer} onPress={this.openGameModal}>
+        <Pressable
+          style={css.buttonContainer}
+          onPress={() => this.props.navigation.navigate("Game")}
+        >
           <Text style={css.fontSizeTitle}>Jouer</Text>
         </Pressable>
         <Modal visible={this.state.GameModalView}>
           <View style={{ marginTop: 50 }}>
-            <Pressable onPress={this.openGameModal}>
+            <Pressable onPress={this.openGameModal} style={css.blueBackground}>
               <Text>X to close</Text>
             </Pressable>
           </View>
