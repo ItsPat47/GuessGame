@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import css from "../../../assets/CSS/stylesheet";
+import { Accelerometer } from "expo-sensors";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 class GameScreen extends React.Component {
@@ -13,7 +14,8 @@ class GameScreen extends React.Component {
       { name: "mime" },
       { name: "description" }
     ],
-    ArrayKeyWords: [
+    accelerometerData: { x: 0, y: 0, z: 0 },
+    arrayKeyWords: [
       { name: "VERRE" },
       { name: "CRAYON" },
       { name: "PAPIER" },
@@ -259,15 +261,19 @@ class GameScreen extends React.Component {
     gameStart: false,
     gameEnd: false,
     timerGameStart: 3,
-    timeLimit: 60
+    timeLimit: 60,
+    lockAccelero: false
   };
 
   componentDidMount() {
     this.timerCountDown();
+    this._subscribeToAccelerometer();
   }
   componentWillUnmount() {
     clearInterval(this.myInterval);
     clearInterval(this.timeLeftInterval);
+
+    this._unsubscribeFromAccelerometer();
   }
 
   timerCountDown = () => {
@@ -294,7 +300,7 @@ class GameScreen extends React.Component {
       }
       if (this.state.timeLimit === 0) {
         clearInterval(this.timeLeftInterval);
-        this.props.navigation.navigate("Main");
+        this.props.navigation.navigate("Score");
       }
     }, 1000);
   };
@@ -302,14 +308,10 @@ class GameScreen extends React.Component {
     if (this.state.gameStart === true) {
       return (
         <View>
-          <Text>{this.state.currentWord}</Text>
+          <Text style={css.fontGameWord}>{this.state.currentWord}</Text>
         </View>
       );
     }
-  };
-
-  deleteCurrentWordFromArray = () => {
-    this.state.ArrayKeyWords.splice(this.state.currentWordIndex, 1);
   };
   showTimer = () => {
     if (this.state.showTimer === true) {
@@ -320,21 +322,67 @@ class GameScreen extends React.Component {
       );
     }
   };
+  _subscribeToAccelerometer = () => {
+    Accelerometer.setUpdateInterval(200);
+    this._accelerometerSubscription = Accelerometer.addListener(
+      accelerometerData => this.setState({ accelerometerData })
+    );
+  };
+
+  _unsubscribeFromAccelerometer = () => {
+    this._accelerometerSubscription = null;
+  };
+
+  deleteCurrentWordFromArray = point => {
+    if (point === true) {
+      this.setState(({ points }) => ({
+        points: points + 1
+      }));
+    }
+    this.setState({ lockAccelero: true }, () => {
+      this.state.arrayKeyWords.splice(this.state.currentWordIndex, 1);
+      this.selectRandomWord();
+    });
+  };
+
+  showAccelerometer = () => {
+    //Skip word
+    if (
+      this.state.lockAccelero === false &&
+      this.state.accelerometerData.z < -0.9
+    ) {
+      this.deleteCurrentWordFromArray(false);
+    }
+    //get Point and next word
+    if (
+      this.state.lockAccelero === false &&
+      this.state.accelerometerData.z > 0.9
+    ) {
+      this.deleteCurrentWordFromArray(true);
+    }
+    if (
+      this.state.lockAccelero === true &&
+      this.state.accelerometerData.z < 0.5 &&
+      this.state.accelerometerData.z > -0.5
+    ) {
+      this.setState({ lockAccelero: false });
+    }
+  };
 
   selectRandomWord = () => {
-    const random = Math.floor(Math.random() * this.state.ArrayKeyWords.length);
+    const random = Math.floor(Math.random() * this.state.arrayKeyWords.length);
     this.setState({
-      currentWord: this.state.ArrayKeyWords[random].name,
+      currentWord: this.state.arrayKeyWords[random].name,
       currentWordIndex: random
     });
   };
   skipWord = () => {
+    this.setState({ lockAccelero: true });
     this.deleteCurrentWordFromArray();
     this.selectRandomWord();
   };
   getPoint = () => {
-    this.deleteCurrentWordFromArray();
-    this.selectRandomWord();
+    this.setState({ lockAccelero: true });
     this.setState(({ points }) => ({
       points: points + 1
     }));
@@ -344,28 +392,10 @@ class GameScreen extends React.Component {
     return (
       <View style={[css.mainPageBackground, css.blueBackground]}>
         <Text>{this.state.timeLimit}</Text>
+        <Text>{this.state.points}</Text>
+        {this.showAccelerometer()}
         {this.showTimer()}
         {this.currentWord()}
-        {this.state.gameEnd === false ? (
-          <Pressable>
-            <Text
-              style={css.fontSizeTitle}
-              onPress={() => this.props.navigation.navigate("Main")}
-            >
-              Go to main screen
-            </Text>
-          </Pressable>
-        ) : null}
-        <Pressable>
-          <Text style={css.fontSizeTitle} onPress={() => this.skipWord()}>
-            Skip
-          </Text>
-        </Pressable>
-        <Pressable>
-          <Text style={css.fontSizeTitle} onPress={() => this.getPoint()}>
-            getPoint
-          </Text>
-        </Pressable>
       </View>
     );
   }

@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import MainPage from "./src/MainPage";
 import GameScreen from "./src/Components/Game/GameScreen";
+import ScoreScreen from "./src/Components/Game/ScoreScreen";
 
 //createStackNavigator is a function that returns
 //an object containing 2 properties: Screen and Navigator
@@ -25,6 +26,7 @@ export default function App() {
       >
         <Stack.Screen name="Main" component={MainPage} />
         <Stack.Screen name="Game" component={GameScreen} />
+        <Stack.Screen name="Score" component={ScoreScreen} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

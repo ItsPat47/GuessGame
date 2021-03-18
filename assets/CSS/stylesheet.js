@@ -16,6 +16,9 @@ const Style = StyleSheet.create({
   fontSizeTitle: {
     fontSize: 20
   },
+  fontGameWord: {
+    fontSize: 50
+  },
   buttonContainer: {
     display: "flex",
     alignItems: "center",
@@ -27,8 +30,8 @@ const Style = StyleSheet.create({
     marginBottom: 30
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     backgroundColor: "#ffffff",
     marginBottom: 50
   }
