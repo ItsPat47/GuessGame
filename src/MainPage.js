@@ -4,6 +4,7 @@ import css from "../assets/CSS/stylesheet";
 import OptionsScreen from "./Components/Options/OptionsScreen";
 import GameScreen from "./Components/Game/GameScreen";
 import logo from "../assets/images/eikeLogo.png";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 class MainPage extends React.Component {
   state = {
@@ -16,7 +17,9 @@ class MainPage extends React.Component {
     GameModalView: false
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  }
 
   openSettingsModal = () => {
     this.setState({ SettingsmodalView: !this.state.SettingsmodalView });

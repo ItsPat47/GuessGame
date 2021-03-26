@@ -266,6 +266,7 @@ class GameScreen extends React.Component {
   };
 
   componentDidMount() {
+    this.changeScreenOrientation();
     this.timerCountDown();
     this._subscribeToAccelerometer();
   }
@@ -387,6 +388,12 @@ class GameScreen extends React.Component {
       points: points + 1
     }));
   };
+  changeScreenOrientation() {
+    console.log("rek");
+    ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+    );
+  }
 
   render() {
     return (
