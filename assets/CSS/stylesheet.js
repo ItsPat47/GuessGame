@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { red } from "ansi-colors";
 
 const Style = StyleSheet.create({
-  blueBackground: {
+  appBackground: {
     backgroundColor: "#edc344"
   },
   mainPageBackground: {

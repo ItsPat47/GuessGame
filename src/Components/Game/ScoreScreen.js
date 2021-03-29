@@ -4,7 +4,7 @@ import css from "../../../assets/CSS/stylesheet";
 import * as ScreenOrientation from "expo-screen-orientation";
 class ScoreScreen extends React.Component {
   state = {
-    score: 0
+    points: 0
   };
 
   componentDidMount() {
@@ -13,9 +13,11 @@ class ScoreScreen extends React.Component {
 
   render() {
     return (
-      <View style={[css.mainPageBackground, css.blueBackground]}>
+      <View style={[css.mainPageBackground, css.appBackground]}>
         <Text style={css.fontSizeTitle}>A winner is you</Text>
-        <Text style={css.fontSizeTitle}>your score : {this.state.score}</Text>
+        <Text style={css.fontSizeTitle}>
+          score : {this.props.route.params.points}
+        </Text>
         <Pressable
           style={css.buttonContainer}
           onPress={() => this.props.navigation.navigate("Main")}

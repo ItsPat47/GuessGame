@@ -301,7 +301,7 @@ class GameScreen extends React.Component {
       }
       if (this.state.timeLimit === 0) {
         clearInterval(this.timeLeftInterval);
-        this.props.navigation.navigate("Score");
+        this.props.navigation.navigate("Score", { points: this.state.points });
       }
     }, 1000);
   };
@@ -318,11 +318,12 @@ class GameScreen extends React.Component {
     if (this.state.showTimer === true) {
       return (
         <View>
-          <Text>{this.state.timerGameStart}</Text>
+          <Text style={{ fontSize: 80 }}>{this.state.timerGameStart}</Text>
         </View>
       );
     }
   };
+
   _subscribeToAccelerometer = () => {
     Accelerometer.setUpdateInterval(200);
     this._accelerometerSubscription = Accelerometer.addListener(
@@ -337,13 +338,16 @@ class GameScreen extends React.Component {
   deleteCurrentWordFromArray = point => {
     if (point === true) {
       this.setState(({ points }) => ({
-        points: points + 1
+        points: points + 1,
+        lockAccelero: true
       }));
-    }
-    this.setState({ lockAccelero: true }, () => {
-      this.state.arrayKeyWords.splice(this.state.currentWordIndex, 1);
       this.selectRandomWord();
-    });
+    } else {
+      this.setState({ lockAccelero: true }, () => {
+        this.state.arrayKeyWords.splice(this.state.currentWordIndex, 1);
+        this.selectRandomWord();
+      });
+    }
   };
 
   showAccelerometer = () => {
@@ -361,6 +365,7 @@ class GameScreen extends React.Component {
     ) {
       this.deleteCurrentWordFromArray(true);
     }
+    //Unlock accelero word
     if (
       this.state.lockAccelero === true &&
       this.state.accelerometerData.z < 0.5 &&
@@ -389,20 +394,18 @@ class GameScreen extends React.Component {
     }));
   };
   changeScreenOrientation() {
-    console.log("rek");
-    ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-    );
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
   }
 
   render() {
     return (
-      <View style={[css.mainPageBackground, css.blueBackground]}>
-        <Text>{this.state.timeLimit}</Text>
-        <Text>{this.state.points}</Text>
+      <View style={[css.mainPageBackground, css.appBackground]}>
         {this.showAccelerometer()}
-        {this.showTimer()}
-        {this.currentWord()}
+        <View style={{ transform: [{ rotate: "-90deg" }] }}>
+          <Text>{this.state.timeLimit}</Text>
+          {this.showTimer()}
+          {this.currentWord()}
+        </View>
       </View>
     );
   }

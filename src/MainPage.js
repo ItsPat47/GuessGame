@@ -31,7 +31,7 @@ class MainPage extends React.Component {
 
   render() {
     return (
-      <View style={[css.mainPageBackground, css.blueBackground]}>
+      <View style={[css.mainPageBackground, css.appBackground]}>
         <Image source={logo} style={css.logo} />
         <Pressable
           style={css.buttonContainer}
@@ -41,16 +41,16 @@ class MainPage extends React.Component {
         </Pressable>
         <Modal visible={this.state.GameModalView}>
           <View style={{ marginTop: 50 }}>
-            <Pressable onPress={this.openGameModal} style={css.blueBackground}>
+            <Pressable onPress={this.openGameModal} style={css.appBackground}>
               <Text>X to close</Text>
             </Pressable>
           </View>
           <GameScreen />
         </Modal>
 
-        <Pressable style={css.buttonContainer} onPress={this.openSettingsModal}>
+        {/* <Pressable style={css.buttonContainer} onPress={this.openSettingsModal}>
           <Text style={css.fontSizeTitle}>Option</Text>
-        </Pressable>
+        </Pressable> */}
         <Modal visible={this.state.SettingsmodalView}>
           <View style={{ marginTop: 50 }}>
             <Pressable onPress={this.openSettingsModal}>
