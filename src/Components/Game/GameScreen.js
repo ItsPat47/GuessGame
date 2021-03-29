@@ -336,13 +336,13 @@ class GameScreen extends React.Component {
   };
 
   deleteCurrentWordFromArray = point => {
-    if (point === true) {
+    if (point === true && this.state.gameStart === true) {
       this.setState(({ points }) => ({
         points: points + 1,
         lockAccelero: true
       }));
       this.selectRandomWord();
-    } else {
+    } else if (this.state.gameStart === true && point === false) {
       this.setState({ lockAccelero: true }, () => {
         this.state.arrayKeyWords.splice(this.state.currentWordIndex, 1);
         this.selectRandomWord();
@@ -354,14 +354,16 @@ class GameScreen extends React.Component {
     //Skip word
     if (
       this.state.lockAccelero === false &&
-      this.state.accelerometerData.z < -0.9
+      this.state.accelerometerData.z < -0.9 &&
+      this.state.gameStart === true
     ) {
       this.deleteCurrentWordFromArray(false);
     }
     //get Point and next word
     if (
       this.state.lockAccelero === false &&
-      this.state.accelerometerData.z > 0.9
+      this.state.accelerometerData.z > 0.9 &&
+      this.state.gameStart === true
     ) {
       this.deleteCurrentWordFromArray(true);
     }
@@ -369,7 +371,8 @@ class GameScreen extends React.Component {
     if (
       this.state.lockAccelero === true &&
       this.state.accelerometerData.z < 0.5 &&
-      this.state.accelerometerData.z > -0.5
+      this.state.accelerometerData.z > -0.5 &&
+      this.state.gameStart === true
     ) {
       this.setState({ lockAccelero: false });
     }
@@ -400,9 +403,9 @@ class GameScreen extends React.Component {
   render() {
     return (
       <View style={[css.mainPageBackground, css.appBackground]}>
-        {this.showAccelerometer()}
         <View style={{ transform: [{ rotate: "-90deg" }] }}>
-          <Text>{this.state.timeLimit}</Text>
+          {/* <Text>{this.state.timeLimit}</Text> */}
+          {this.showAccelerometer()}
           {this.showTimer()}
           {this.currentWord()}
         </View>
